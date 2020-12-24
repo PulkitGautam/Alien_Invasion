@@ -80,7 +80,7 @@ class AlienInvasion:
         # object 1, object 2, delete_first, delete_second
 
         if collision:
-            print("Alien Down!!! ")
+            print("Alien Down!!!")
 
         if not self.aliens:
             self.bullets.empty()                 # Destroy existing bullets
@@ -129,7 +129,7 @@ class AlienInvasion:
     def _change_fleet_direction(self):
         for alien in self.aliens.sprites():
             alien.rect.y +=self.settings.alien_drop_speed
-            self.settings.fleet_direction *= -1
+        self.settings.fleet_direction *= -1
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)      # Fill the set Color
