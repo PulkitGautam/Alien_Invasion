@@ -32,9 +32,11 @@ class AlienInvasion:
     def run_game(self):           # Starting the main loop of the game
         while True:
             self._check_events()                 # Checking for Events
-            self.ship.update()                   # Updating Ship Position
-            self._updating_bullets()             # Updating Bullet
-            self._update_aliens()
+
+            if self.stats.game_active:
+                self.ship.update()                   # Updating Ship Position
+                self._updating_bullets()             # Updating Bullet
+                self._update_aliens()
 
             self._update_screen()                # Updating Screen
 
@@ -126,15 +128,18 @@ class AlienInvasion:
         self._check_aliens_bottom()
 
     def ship_hit(self):
-        self.stats.ships_left -= 1
+        if self.stats.ships_left > 0:
+            self.stats.ships_left -= 1
 
-        self.aliens.empty()
-        self.bullets.empty()
+            self.aliens.empty()
+            self.bullets.empty()
 
-        self._create_fleet()
-        self.ship.center_ship()
+            self._create_fleet()
+            self.ship.center_ship()
 
-        sleep(1)
+            sleep(1)
+        else:
+            self.stats.game_active = False
 
     def _check_fleet_edges(self):
         for alien in self.aliens.sprites():
