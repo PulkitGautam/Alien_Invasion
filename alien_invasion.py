@@ -6,6 +6,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
+from button import Button
 
 # Overall Class to manage Alien_Invasion game assets and behaviour
 
@@ -29,6 +30,8 @@ class AlienInvasion:
 
         self._create_fleet()
 
+        self.play_button = Button(self, "Play")
+
     def run_game(self):           # Starting the main loop of the game
         while True:
             self._check_events()                 # Checking for Events
@@ -48,6 +51,9 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:                   # On Release of Key
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
 
     def _check_keydown_events(self, event):
         if event.key == pygame.K_RIGHT:
@@ -64,6 +70,10 @@ class AlienInvasion:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
+
+    def _check_play_button(self, mouse_pos):
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.stats.game_active = True
     
     def _fire_bullet(self):
         # Create a new bullet and add it to group
@@ -165,6 +175,9 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():         # Loop for drawing each bullet
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        if self.stats.game_active == False:
+            self.play_button.draw_button()
 
         pygame.display.flip()         # Constantly Updates Screen for changes in game elements
 
