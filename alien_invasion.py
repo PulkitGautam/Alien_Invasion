@@ -171,13 +171,13 @@ class AlienInvasion:
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)      # Fill the set Color
-        self.ship.blitme()                            # Draws the image on Screen
-        for bullet in self.bullets.sprites():         # Loop for drawing each bullet
-            bullet.draw_bullet()
-        self.aliens.draw(self.screen)
-
         if self.stats.game_active == False:
             self.play_button.draw_button()
+        if self.stats.game_active == True:
+            self.ship.blitme()                            # Draws the image on Screen
+            for bullet in self.bullets.sprites():         # Loop for drawing each bullet
+                bullet.draw_bullet()
+            self.aliens.draw(self.screen)
 
         pygame.display.flip()         # Constantly Updates Screen for changes in game elements
 
