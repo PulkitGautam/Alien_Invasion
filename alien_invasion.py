@@ -18,8 +18,8 @@ class AlienInvasion:
         pygame.init()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-        self.settings.screen_width = self.screen.get_rect().width
-        self.settings.screen_height = self.screen.get_rect().height
+        self.screen_width = self.screen.get_rect().width
+        self.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
 
         self.stats = GameStats(self)
@@ -101,16 +101,17 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()                 # Destroy existing bullets
             self._create_fleet()                 # Create new fleet
+            self.settings.increase_speed()
     
     def _create_fleet(self):
         alien = Alien(self)                                # New Alien
         alien_width, alien_height = alien.rect.size
-        available_space_x = self.settings.screen_width - (2 * alien_width)          # Calculating space betwwen aliens
+        available_space_x = self.screen_width - (2 * alien_width)          # Calculating space betwwen aliens
         number_aliens_x = available_space_x // (2 * alien_width)                    # and number of aliens in a row
 
         # Calculation No. of rows
         ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height - (3*alien_height) - ship_height)
+        available_space_y = (self.screen_height - (3*alien_height) - ship_height)
         number_rows = available_space_y//(2*alien_height)
 
         # Creating Fleet of Aliens
@@ -134,6 +135,7 @@ class AlienInvasion:
         # Detect Alien Ship collision
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self.ship_hit()
+            sys.exit()
 
         self._check_aliens_bottom()
 
@@ -156,7 +158,7 @@ class AlienInvasion:
             if alien.check_edges():
                 self._change_fleet_direction()
                 break
-    
+
     def _change_fleet_direction(self):
         for alien in self.aliens.sprites():
             alien.rect.y +=self.settings.alien_drop_speed
@@ -173,8 +175,10 @@ class AlienInvasion:
         self.screen.fill(self.settings.bg_color)      # Fill the set Color
         if self.stats.game_active == False:
             self.play_button.draw_button()
+            pygame.mouse.set_visible(True)
         if self.stats.game_active == True:
             self.ship.blitme()                            # Draws the image on Screen
+            pygame.mouse.set_visible(False)
             for bullet in self.bullets.sprites():         # Loop for drawing each bullet
                 bullet.draw_bullet()
             self.aliens.draw(self.screen)
